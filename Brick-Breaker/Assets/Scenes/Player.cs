@@ -47,6 +47,11 @@ public class Player : MonoBehaviour
                 return;
 
             transform.Translate(speed * Time.deltaTime, 0, 0);
+
+            if (!fire)
+            {
+                ball.transform.Translate(speed * Time.deltaTime, 0, 0);
+            }
         }
         else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.S))
         {
@@ -54,6 +59,11 @@ public class Player : MonoBehaviour
                 return;
 
             transform.Translate(-speed * Time.deltaTime, 0, 0);
+
+            if (!fire)
+            {
+                ball.transform.Translate(-speed * Time.deltaTime, 0, 0);
+            }
         }
         else if (Input.GetKey(KeyCode.Space))
         {
