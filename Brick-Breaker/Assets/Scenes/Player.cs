@@ -11,15 +11,17 @@ public class Player : MonoBehaviour
 
     bool dead = false;
 
-    public GameObject left;
-    public GameObject right;
-    public GameObject top;
-    public GameObject bottom;
-    public GameObject playerCenter;
-    public GameObject playerLeft;
-    public GameObject playerRight;
-    public GameObject ball;
-    public GameObject replayButton;
+    GameObject left;
+    GameObject right;
+    GameObject top;
+    GameObject bottom;
+    GameObject playerCenter;
+    GameObject playerLeft;
+    GameObject playerRight;
+    GameObject ball;
+    GameObject replayButton;
+    GameObject firstBrick;
+
 
     bool fire = false;
 
@@ -34,8 +36,33 @@ public class Player : MonoBehaviour
         right = GameObject.Find("Right");
         ball = GameObject.Find("Ball");
         replayButton = GameObject.Find("ReplayButton");
+        firstBrick = GameObject.Find("Brick");
 
         replayButton.SetActive(false);
+
+        float xMargin = 0.1f;
+        float yMargin = 0.2f;
+        float xSize = firstBrick.GetComponent<SpriteRenderer>().bounds.size.x;
+        float ySize = firstBrick.GetComponent<SpriteRenderer>().bounds.size.y;
+        float left2 = left.GetComponent<SpriteRenderer>().bounds.max.x;
+        float top2 = top.GetComponent<SpriteRenderer>().bounds.min.y;
+
+        for (int y = 0; y < 6; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                GameObject newBrick = Instantiate(firstBrick);
+
+                float xPos = left2 + xSize / 2 + (xSize + xMargin) * x;
+                float yPos = top2 - ySize / 2 - (ySize + yMargin) * y;
+
+                newBrick.transform.position = new Vector3(xPos, yPos, 0);
+                newBrick.SetActive(true);
+            }
+        }
+
+
+        firstBrick.SetActive(false);
     }
 
 
@@ -85,8 +112,11 @@ public class Player : MonoBehaviour
         ball.transform.Translate(xSpeed * Time.deltaTime, ySpeed * Time.deltaTime, 0);
     }
 
-    public void BallCollideBorder(Collision2D collision)
+
+    public void OnBallCollide(Collision2D collision)
     {
+        Debug.Log(collision.gameObject.tag);
+
         if (collision.gameObject == right)
             xSpeed = -ballSpeed;
 
@@ -96,13 +126,18 @@ public class Player : MonoBehaviour
         if (collision.gameObject == top)
             ySpeed = -ballSpeed;
 
+        if (collision.gameObject == playerCenter || collision.gameObject == playerLeft || collision.gameObject == playerRight)
+            ySpeed = ballSpeed;
+
         if (collision.gameObject == bottom)
             Die();
-    }
 
-    public void BallCollidePlayer(Collision2D collision)
-    {
-        ySpeed = ballSpeed;
+        if (collision.gameObject.tag == "brick")
+        {
+            ySpeed = -ySpeed;
+            xSpeed = -xSpeed;
+            collision.gameObject.SetActive(false);
+        }
     }
 
     public void Die()

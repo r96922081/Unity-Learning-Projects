@@ -16,6 +16,6 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        GameObject.Find("Player").GetComponent<Player>().BallCollideBorder(collision);
+        GameObject.Find("Player").GetComponent<Player>().OnBallCollide(collision);
     }
 }
