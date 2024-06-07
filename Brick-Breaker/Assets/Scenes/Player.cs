@@ -22,6 +22,8 @@ public class Player : MonoBehaviour
     GameObject replayButton;
     GameObject firstBrick;
 
+    Collision2D collision = null;
+
 
     bool fire = false;
 
@@ -109,6 +111,14 @@ public class Player : MonoBehaviour
             }
         }
 
+        if (collision != null)
+        {
+            ySpeed = -ySpeed;
+            xSpeed = -xSpeed;
+            collision.gameObject.SetActive(false);
+            collision = null;
+        }
+
         ball.transform.Translate(xSpeed * Time.deltaTime, ySpeed * Time.deltaTime, 0);
     }
 
@@ -134,9 +144,10 @@ public class Player : MonoBehaviour
 
         if (collision.gameObject.tag == "brick")
         {
-            ySpeed = -ySpeed;
-            xSpeed = -xSpeed;
-            collision.gameObject.SetActive(false);
+            this.collision = collision;
+            //ySpeed = -ySpeed;
+            //xSpeed = -xSpeed;
+            //collision.gameObject.SetActive(false);
         }
     }
 
